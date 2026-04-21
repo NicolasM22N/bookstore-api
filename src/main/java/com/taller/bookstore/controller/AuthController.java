@@ -20,7 +20,7 @@ public class AuthController {
         return "User registered successfully";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);
     }

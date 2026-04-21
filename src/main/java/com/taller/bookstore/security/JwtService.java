@@ -9,7 +9,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private final String SECRET = "mysecretkeymysecretkeymysecretkey";
+    private final String SECRET = "myultrasecurejwtsecretkeyforbookstoreproject2026token";
     private final long EXPIRATION = 86400000;
 
     public String generateToken(String email) {
