@@ -1,6 +1,7 @@
 package com.taller.bookstore.service.impl;
 
 import com.taller.bookstore.entity.Book;
+import com.taller.bookstore.exception.custom.ResourceNotFoundException;
 import com.taller.bookstore.repository.BookRepository;
 import com.taller.bookstore.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +21,38 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findAll() {
+    public List<Book> findAll(
+            String author,
+            String category,
+            int page,
+            int size) {
+
+        if (author != null && !author.isBlank()) {
+            return bookRepository
+                    .findByAuthor_NameContainingIgnoreCase(author);
+        }
+
+        if (category != null && !category.isBlank()) {
+            return bookRepository
+                    .findByCategories_NameContainingIgnoreCase(category);
+        }
+
         return bookRepository.findAll();
     }
 
     @Override
     public Book findById(Long id) {
-        return bookRepository.findById(id).orElse(null);
+
+        return bookRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Book with id " + id + " not found"));
     }
 
     @Override
     public Book update(Long id, Book book) {
 
-        Book existing = bookRepository.findById(id).orElse(null);
-
-        if (existing == null) {
-            return null;
-        }
+        Book existing = findById(id);
 
         existing.setTitle(book.getTitle());
         existing.setIsbn(book.getIsbn());
@@ -48,6 +64,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void delete(Long id) {
-        bookRepository.deleteById(id);
+
+        Book existing = findById(id);
+
+        bookRepository.delete(existing);
     }
 }
