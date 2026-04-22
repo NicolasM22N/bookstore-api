@@ -31,12 +31,13 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/books/**").permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "/books/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
+
+                        .requestMatchers("/orders/**").authenticated()
                         .requestMatchers("/authors/**").authenticated()
                         .requestMatchers("/categories/**").authenticated()
-
-                        .requestMatchers(HttpMethod.POST, "/books/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/books/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/books/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
@@ -47,8 +48,8 @@ public class SecurityConfig {
                 .headers(headers ->
                         headers.frameOptions(frame -> frame.disable())
                 )
-                .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable());
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .formLogin(form -> form.disable());
 
         return http.build();
     }
