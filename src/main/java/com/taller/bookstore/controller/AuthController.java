@@ -7,6 +7,8 @@ import com.taller.bookstore.dto.response.AuthResponse;
 import com.taller.bookstore.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -19,18 +21,18 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ApiResponse<String> register(
+    public ResponseEntity<ApiResponse<String>> register(
             @Valid @RequestBody RegisterRequest request) {
 
         authService.register(request);
 
-        return new ApiResponse<>(
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(
                 "success",
                 201,
                 "User registered successfully",
                 null,
                 Instant.now()
-        );
+        ));
     }
 
     @PostMapping("/login")

@@ -1,18 +1,22 @@
 package com.taller.bookstore.service;
 
-import com.taller.bookstore.entity.Category;
+import com.taller.bookstore.dto.request.CategoryRequest;
+import com.taller.bookstore.dto.response.BookResponse;
+import com.taller.bookstore.dto.response.CategoryResponse;
 
 import java.util.List;
 
 public interface CategoryService {
 
-    Category create(Category category);
+    CategoryResponse create(CategoryRequest request);
 
-    List<Category> findAll();
+    List<CategoryResponse> findAll();
 
-    Category findById(Long id);
+    CategoryResponse findById(Long id);
 
-    Category update(Long id, Category category);
+    CategoryResponse update(Long id, CategoryRequest request);
+
+    List<BookResponse> findBooks(Long id);
 
     void delete(Long id);
 }

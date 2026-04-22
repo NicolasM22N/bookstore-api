@@ -3,14 +3,14 @@ package com.taller.bookstore.service.impl;
 import com.taller.bookstore.dto.request.LoginRequest;
 import com.taller.bookstore.dto.request.RegisterRequest;
 import com.taller.bookstore.dto.response.AuthResponse;
-import com.taller.bookstore.entity.Role;
 import com.taller.bookstore.entity.User;
 import com.taller.bookstore.exception.custom.DuplicateResourceException;
-import com.taller.bookstore.exception.custom.UnauthorizedAccessException;
+import com.taller.bookstore.mapper.UserMapper;
 import com.taller.bookstore.repository.UserRepository;
 import com.taller.bookstore.security.JwtService;
 import com.taller.bookstore.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +21,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserMapper userMapper;
 
     @Override
     public void register(RegisterRequest request) {
@@ -29,14 +30,7 @@ public class AuthServiceImpl implements AuthService {
             throw new DuplicateResourceException("Email already exists");
         }
 
-        User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ROLE_USER)
-                .build();
-
-        userRepository.save(user);
+        userRepository.save(userMapper.toEntity(request, passwordEncoder));
     }
 
     @Override
@@ -44,13 +38,13 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() ->
-                        new UnauthorizedAccessException("Invalid credentials"));
+                        new BadCredentialsException("Invalid credentials"));
 
         if (!passwordEncoder.matches(
                 request.getPassword(),
                 user.getPassword())) {
 
-            throw new UnauthorizedAccessException("Invalid credentials");
+            throw new BadCredentialsException("Invalid credentials");
         }
 
         String token = jwtService.generateToken(user);

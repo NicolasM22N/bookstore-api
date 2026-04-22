@@ -1,18 +1,22 @@
 package com.taller.bookstore.service;
 
-import com.taller.bookstore.entity.Author;
+import com.taller.bookstore.dto.request.AuthorRequest;
+import com.taller.bookstore.dto.response.AuthorResponse;
+import com.taller.bookstore.dto.response.BookResponse;
 
 import java.util.List;
 
 public interface AuthorService {
 
-    Author create(Author author);
+    AuthorResponse create(AuthorRequest request);
 
-    List<Author> findAll();
+    List<AuthorResponse> findAll();
 
-    Author findById(Long id);
+    AuthorResponse findById(Long id);
 
-    Author update(Long id, Author author);
+    AuthorResponse update(Long id, AuthorRequest request);
+
+    List<BookResponse> findBooks(Long id);
 
     void delete(Long id);
 }
