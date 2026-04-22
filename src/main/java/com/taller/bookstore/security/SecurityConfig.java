@@ -3,6 +3,7 @@ package com.taller.bookstore.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,10 +28,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/books/**").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/books/**").authenticated()
-                        .requestMatchers(org.springframework.http.HttpMethod.PUT, "/books/**").authenticated()
-                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/books/**").authenticated()
+
+                        .requestMatchers(HttpMethod.GET, "/books/**").permitAll()
+
+                        .requestMatchers("/authors/**").authenticated()
+                        .requestMatchers("/categories/**").authenticated()
+
+                        .requestMatchers(HttpMethod.POST, "/books/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/books/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/books/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
@@ -40,8 +47,8 @@ public class SecurityConfig {
                 .headers(headers ->
                         headers.frameOptions(frame -> frame.disable())
                 )
-                .httpBasic(httpBasic -> httpBasic.disable())
-                .formLogin(form -> form.disable());
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable());
 
         return http.build();
     }
