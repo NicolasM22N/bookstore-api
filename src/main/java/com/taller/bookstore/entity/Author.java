@@ -4,22 +4,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "books")
+@Table(name = "authors")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book {
+public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String name;
 
-    private String isbn;
+    private String biography;
 
-    private Double price;
-
-    private Integer stock;
+    private String email;
 }
