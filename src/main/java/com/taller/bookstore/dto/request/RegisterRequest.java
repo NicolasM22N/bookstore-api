@@ -3,6 +3,7 @@ package com.taller.bookstore.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import com.taller.bookstore.entity.Role;
 import lombok.Data;
 
 @Data
@@ -12,8 +13,12 @@ public class RegisterRequest {
     private String name;
 
     @Email
+    @NotBlank
     private String email;
 
+    @NotBlank
     @Size(min = 8)
     private String password;
+
+    private Role role;
 }

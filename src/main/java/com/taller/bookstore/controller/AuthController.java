@@ -2,10 +2,16 @@ package com.taller.bookstore.controller;
 
 import com.taller.bookstore.dto.request.LoginRequest;
 import com.taller.bookstore.dto.request.RegisterRequest;
+import com.taller.bookstore.dto.response.ApiResponse;
 import com.taller.bookstore.dto.response.AuthResponse;
 import com.taller.bookstore.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
 
 @RestController
 @RequestMapping("/auth")
@@ -15,13 +21,32 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<String>> register(
+            @Valid @RequestBody RegisterRequest request) {
+
         authService.register(request);
-        return "User registered successfully";
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(
+                "success",
+                201,
+                "User registered successfully",
+                null,
+                Instant.now()
+        ));
     }
 
-    @PostMapping("/signin")
-    public AuthResponse login(@RequestBody LoginRequest request) {
-        return authService.login(request);
+    @PostMapping("/login")
+    public ApiResponse<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        AuthResponse response = authService.login(request);
+
+        return new ApiResponse<>(
+                "success",
+                200,
+                "Login successful",
+                response,
+                Instant.now()
+        );
     }
 }

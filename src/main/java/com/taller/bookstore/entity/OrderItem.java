@@ -15,9 +15,15 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
+
     private String bookTitle;
 
     private Integer quantity;
 
     private Double price;
+
+    private Double subtotal;
 }

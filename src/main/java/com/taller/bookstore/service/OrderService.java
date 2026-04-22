@@ -1,21 +1,22 @@
 package com.taller.bookstore.service;
 
-import com.taller.bookstore.entity.Order;
+import com.taller.bookstore.dto.request.OrderRequest;
+import com.taller.bookstore.dto.response.OrderResponse;
 import com.taller.bookstore.entity.OrderStatus;
 
 import java.util.List;
 
 public interface OrderService {
 
-    Order create(Order order);
+    OrderResponse create(OrderRequest request, String email);
 
-    List<Order> findAll();
+    List<OrderResponse> findAll();
 
-    List<Order> findByCustomer(String email);
+    List<OrderResponse> findByCustomer(String email);
 
-    Order findById(Long id);
+    OrderResponse findById(Long id);
 
-    Order updateStatus(Long id, OrderStatus status);
+    OrderResponse updateStatus(Long id, OrderStatus status);
 
     void delete(Long id);
 }
