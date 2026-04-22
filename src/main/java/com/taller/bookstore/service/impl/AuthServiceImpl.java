@@ -6,6 +6,7 @@ import com.taller.bookstore.dto.response.AuthResponse;
 import com.taller.bookstore.entity.Role;
 import com.taller.bookstore.entity.User;
 import com.taller.bookstore.exception.custom.DuplicateResourceException;
+import com.taller.bookstore.exception.custom.UnauthorizedAccessException;
 import com.taller.bookstore.repository.UserRepository;
 import com.taller.bookstore.security.JwtService;
 import com.taller.bookstore.service.AuthService;
@@ -42,10 +43,14 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .orElseThrow(() ->
+                        new UnauthorizedAccessException("Invalid credentials"));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword())) {
+
+            throw new UnauthorizedAccessException("Invalid credentials");
         }
 
         String token = jwtService.generateToken(user.getEmail());
