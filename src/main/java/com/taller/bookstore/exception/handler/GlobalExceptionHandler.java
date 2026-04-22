@@ -2,6 +2,8 @@ package com.taller.bookstore.exception.handler;
 
 import com.taller.bookstore.dto.response.ApiErrorResponse;
 import com.taller.bookstore.exception.custom.DuplicateResourceException;
+import com.taller.bookstore.exception.custom.ResourceNotFoundException;
+import com.taller.bookstore.exception.custom.UnauthorizedAccessException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,40 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNotFound(
+            ResourceNotFoundException ex,
+            HttpServletRequest request) {
+
+        ApiErrorResponse response = new ApiErrorResponse(
+                "error",
+                404,
+                ex.getMessage(),
+                List.of(ex.getMessage()),
+                Instant.now(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ApiErrorResponse> handleUnauthorized(
+            UnauthorizedAccessException ex,
+            HttpServletRequest request) {
+
+        ApiErrorResponse response = new ApiErrorResponse(
+                "error",
+                401,
+                ex.getMessage(),
+                List.of(ex.getMessage()),
+                Instant.now(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(AuthenticationException.class)
