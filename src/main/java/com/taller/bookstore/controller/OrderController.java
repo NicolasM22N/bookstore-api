@@ -2,6 +2,7 @@ package com.taller.bookstore.controller;
 
 import com.taller.bookstore.dto.response.ApiResponse;
 import com.taller.bookstore.entity.Order;
+import com.taller.bookstore.entity.OrderStatus;
 import com.taller.bookstore.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,19 @@ public class OrderController {
         );
     }
 
+    @GetMapping("/my")
+    public ApiResponse<List<Order>> myOrders(
+            @RequestParam String email) {
+
+        return new ApiResponse<>(
+                "success",
+                200,
+                "My orders retrieved successfully",
+                orderService.findByCustomer(email),
+                Instant.now()
+        );
+    }
+
     @GetMapping("/{id}")
     public ApiResponse<Order> findById(@PathVariable Long id) {
         return new ApiResponse<>(
@@ -45,6 +59,20 @@ public class OrderController {
                 200,
                 "Order found",
                 orderService.findById(id),
+                Instant.now()
+        );
+    }
+
+    @PatchMapping("/{id}/status")
+    public ApiResponse<Order> updateStatus(
+            @PathVariable Long id,
+            @RequestParam OrderStatus status) {
+
+        return new ApiResponse<>(
+                "success",
+                200,
+                "Order status updated",
+                orderService.updateStatus(id, status),
                 Instant.now()
         );
     }
