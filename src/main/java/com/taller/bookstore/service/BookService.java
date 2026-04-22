@@ -8,7 +8,7 @@ public interface BookService {
 
     Book create(Book book);
 
-    List<Book> findAll();
+    List<Book> findAll(String author, String category, int page, int size);
 
     Book findById(Long id);
 

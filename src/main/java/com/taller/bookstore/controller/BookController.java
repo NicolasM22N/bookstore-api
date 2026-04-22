@@ -28,12 +28,17 @@ public class BookController {
     }
 
     @GetMapping
-    public ApiResponse<List<Book>> findAll() {
+    public ApiResponse<List<Book>> findAll(
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
         return new ApiResponse<>(
                 "success",
                 200,
                 "Books retrieved successfully",
-                bookService.findAll(),
+                bookService.findAll(author, category, page, size),
                 Instant.now()
         );
     }
@@ -50,7 +55,10 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Book> update(@PathVariable Long id, @RequestBody Book book) {
+    public ApiResponse<Book> update(
+            @PathVariable Long id,
+            @RequestBody Book book) {
+
         return new ApiResponse<>(
                 "success",
                 200,
