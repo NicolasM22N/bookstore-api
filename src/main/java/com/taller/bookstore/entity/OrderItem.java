@@ -3,23 +3,23 @@ package com.taller.bookstore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
-
 @Entity
-@Table(name = "orders")
+@Table(name = "order_items")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String customerEmail;
+    private Long orderId;
 
-    private Double total;
+    private String bookTitle;
 
-    private Instant createdAt;
+    private Integer quantity;
+
+    private Double price;
 }
